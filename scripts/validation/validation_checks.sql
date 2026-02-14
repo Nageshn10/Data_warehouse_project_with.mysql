@@ -1,1 +1,0 @@
-Delete validation_checks.sql
