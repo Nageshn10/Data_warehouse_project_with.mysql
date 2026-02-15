@@ -1,19 +1,27 @@
+/* =====================================================
+   GOLD LAYER VALIDATION
+   Project : Data Warehouse (MySQL)
+   Author  : Nagesh
+
+   Run all checks → expect ZERO rows for errors
+   ===================================================== */
+
 -- =========================================
 -- GOLD VALIDATION : dim_customers
 -- Purpose : Final checks before reporting
 -- =========================================
 
 -- Check 1: No duplicate customers (primary key must be unique)
-SELECT cst_id, COUNT(*)
+SELECT customer_id, COUNT(*)
 FROM gold.dim_customers
-GROUP BY cst_id
+GROUP BY customer_id
 HAVING COUNT(*) > 1;
 
 
 -- Check 2: No NULL customer IDs (mandatory key)
 SELECT *
 FROM gold.dim_customers
-WHERE cst_id IS NULL;
+WHERE customer_id  IS NULL;
 
 
 -- Check 3: Record count should match silver after joins
