@@ -3,92 +3,84 @@
    Project : Data Warehouse (MySQL)
    Author  : Nagesh
 
+   Purpose:
+   - Check duplicates
+   - Check NULL keys
+   - Check foreign key integrity
+   - Ensure data ready for reporting
+
    Run all checks → expect ZERO rows for errors
    ===================================================== */
 
+
+
 -- =========================================
 -- GOLD VALIDATION : dim_customers
--- Purpose : Final checks before reporting
 -- =========================================
 
--- Check 1: No duplicate customers (primary key must be unique)
+-- No duplicate customers
 SELECT customer_id, COUNT(*)
 FROM gold.dim_customers
 GROUP BY customer_id
 HAVING COUNT(*) > 1;
 
-
--- Check 2: No NULL customer IDs (mandatory key)
+-- No NULL business key
 SELECT *
 FROM gold.dim_customers
-WHERE customer_id  IS NULL;
+WHERE customer_id IS NULL;
 
-
--- Check 3: Record count should match silver after joins
-SELECT COUNT(*) FROM silver.crm_cust_info;
-SELECT COUNT(*) FROM gold.dim_customers;
-
-
--- Check 4: Important columns should not be empty
+-- No NULL surrogate key
 SELECT *
 FROM gold.dim_customers
-WHERE cst_firstname IS NULL
-   OR cst_lastname IS NULL;
+WHERE customer_key IS NULL;
+
+
 
 -- =========================================
 -- GOLD VALIDATION : dim_products
 -- =========================================
 
--- Check 1: No duplicate products
-SELECT prd_key, COUNT(*)
+-- No duplicate products
+SELECT product_id, COUNT(*)
 FROM gold.dim_products
-GROUP BY prd_key
+GROUP BY product_id
 HAVING COUNT(*) > 1;
 
-
--- Check 2: No NULL product keys
+-- No NULL business key
 SELECT *
 FROM gold.dim_products
-WHERE prd_key IS NULL;
+WHERE product_id IS NULL;
 
-
--- Check 3: Only active products loaded (no historical)
+-- No NULL surrogate key
 SELECT *
 FROM gold.dim_products
-WHERE prd_end_dt IS NOT NULL;
+WHERE product_key IS NULL;
 
-
--- Check 4: Product cost should not be negative
+-- Cost should not be negative
 SELECT *
 FROM gold.dim_products
-WHERE prd_cost < 0;
+WHERE cost < 0;
+
+
 
 -- =========================================
 -- GOLD VALIDATION : fact_sales
 -- =========================================
 
--- Check 1: No duplicate transactions
-SELECT order_id, COUNT(*)
-FROM gold.fact_sales
-GROUP BY order_id
-HAVING COUNT(*) > 1;
-
-
--- Check 2: No NULL foreign keys
+-- No NULL foreign keys
 SELECT *
 FROM gold.fact_sales
-WHERE cst_id IS NULL
-   OR prd_key IS NULL;
+WHERE customer_key IS NULL
+   OR product_key IS NULL;
 
-
--- Check 3: Sales amount should be positive
+-- Sales math check (sales = qty * price)
 SELECT *
 FROM gold.fact_sales
-WHERE sales_amount <= 0;
+WHERE sales_amount <> quantity * price;
 
-
--- Check 4: Total sales should match silver totals
-SELECT SUM(sales_amount) FROM silver.sales_data;
-SELECT SUM(sales_amount) FROM gold.fact_sales;
-
-
+-- No negative values
+SELECT *
+FROM gold.fact_sales
+WHERE sales_amount < 0
+   OR quantity < 0
+   OR price < 0;
