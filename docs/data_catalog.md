@@ -19,8 +19,8 @@ last_name	text	Last name	Smith
 country	text	Customer country	USA
 marital_status	text	Marital status	Married
 gender	text	Standardized gender	Male
-birthdate	text	Date of birth	1990-05-10
-create_date	text	Account created date	2024-01-01
+birthdate	date	Date of birth	1990-05-10
+create_date	date	Account created date	2024-01-01
 
 Example
 Used to analyze customers by country or demographics.
@@ -39,8 +39,8 @@ category_id	varchar(50)	Category ID	CAT01
 category	text	Category name	Electronics
 subcategory	text	Subcategory name	Computers
 maintenance	text	Maintenance type	Warranty
-cost	text	Product cost	50000
-product_line	text	Product line	Road
+cost	decimal(10,2)	Product cost	50000.00
+product_line	text	Product line	Retail
 start_date	date	Start date	2023-01-01
 
 Example
@@ -58,9 +58,9 @@ customer_key	bigint	Links to dim_customers	1
 order_date	date	Order date	2024-01-01
 shipping_date	date	Ship date	2024-01-02
 due_date	date	Due date	2024-01-05
-sales_amount	decimal(15,2)	Total sale value	10000.00
 quantity	int	Units sold	2
-price	decimal(15,2)	Price per unit	5000.00
+price	decimal(10,2)	Price per unit	5000.00
+sales_amount	decimal(15,2)	Total sale value	10000.00
 
 Example
 Used to calculate revenue, monthly sales, and top customers.
