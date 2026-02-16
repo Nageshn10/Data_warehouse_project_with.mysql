@@ -1,7 +1,7 @@
 /*
 ========================================================
 TABLE   : erp_px_cat_g1v2
-LAYER   : Bronze → Silver
+LAYER   : Silver (Clean Layer)
 PURPOSE : Validate product category and subcategory data
 RULE    : All queries must return ZERO rows
 ========================================================
