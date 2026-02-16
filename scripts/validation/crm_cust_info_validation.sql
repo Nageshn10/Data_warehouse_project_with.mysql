@@ -1,33 +1,35 @@
 /*
 ========================================================
-TABLE : crm_cust_info
-LAYER : Bronze → Silver
-PURPOSE: Validate customer master data quality
-RULE  : Queries should return ZERO rows
+TABLE   : silver.crm_cust_info
+LAYER   : Silver (Clean Layer)
+PURPOSE : Ensure customer data is clean before Gold load
+RULE    : All queries must return ZERO rows
 ========================================================
 */
 
--- Duplicate customer IDs
+-- Check 1: No duplicate customer IDs
 SELECT cst_id, COUNT(*) AS duplicate_count
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 GROUP BY cst_id
 HAVING COUNT(*) > 1;
 
--- Null or empty IDs
+
+-- Check 2: No NULL or empty customer IDs
 SELECT *
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 WHERE cst_id IS NULL OR cst_id = '';
 
--- Unwanted spaces in names
+
+-- Check 3: No extra spaces in names
 SELECT *
-FROM bronze.crm_cust_info
+FROM silver.crm_cust_info
 WHERE cst_firstname <> TRIM(cst_firstname)
    OR cst_lastname  <> TRIM(cst_lastname);
 
--- Gender consistency check
-SELECT DISTINCT cst_gndr
-FROM bronze.crm_cust_info;
 
--- If rows returned → fix data before Silver load
+-- Check 4: Validate gender values only (Male/Female/n/a)
+SELECT DISTINCT cst_gndr
+FROM silver.crm_cust_info;
+
 
 
