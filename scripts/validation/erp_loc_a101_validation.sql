@@ -2,7 +2,7 @@
 ========================================================
 TABLE   : silver.erp_loc_a101
 LAYER   : Silver (Clean Layer)
-PURPOSE : Validate and standardize customer location data
+PURPOSE : Validate customer location data
 RULE    : All queries must return ZERO rows
 ========================================================
 */
@@ -13,7 +13,7 @@ FROM silver.erp_loc_a101
 WHERE CID IS NULL OR CID = '';
 
 
--- Check 2: Country must not be null or blank
+-- Check 2: Country must not be blank
 SELECT *
 FROM silver.erp_loc_a101
 WHERE CNTRY IS NULL OR CNTRY = '';
@@ -25,9 +25,11 @@ FROM silver.erp_loc_a101
 WHERE CNTRY <> TRIM(CNTRY);
 
 
--- Check 4: Country values review for standardization
--- Expect consistent values like India, USA, UK (not mixed cases)
-SELECT DISTINCT CNTRY
-FROM silver.erp_loc_a101;
+-- Check 4: Example standardization rule (demo only)
+-- Only one allowed value for testing
+SELECT *
+FROM silver.erp_loc_a101
+WHERE TRIM(CNTRY) <> 'United States';
+
 
 
