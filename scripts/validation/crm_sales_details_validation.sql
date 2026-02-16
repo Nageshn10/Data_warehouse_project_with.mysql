@@ -1,32 +1,48 @@
 /*
 ========================================================
-TABLE : crm_sales_details
-PURPOSE: Validate transactional sales accuracy
-RULE  : Expect ZERO rows
+TABLE   : silver.crm_sales_details
+LAYER   : Silver (Clean Layer)
+PURPOSE : Validate transactional sales data before Gold load
+RULE    : All queries must return ZERO rows
 ========================================================
 */
 
--- Invalid order dates
+-- Check 1: Order date must exist
 SELECT *
-FROM bronze.crm_sales_details
-WHERE sls_order_dt <= 0
-   OR LENGTH(sls_order_dt) <> 8
-   OR sls_order_dt > 20500101;
+FROM silver.crm_sales_details
+WHERE sls_order_dt IS NULL;
 
--- Order date sequence check
+
+-- Check 2: Date sequence must be correct
+-- order <= ship <= due
 SELECT *
-FROM bronze.crm_sales_details
+FROM silver.crm_sales_details
 WHERE sls_order_dt > sls_ship_dt
-   OR sls_order_dt > sls_due_dt;
+   OR sls_ship_dt  > sls_due_dt;
 
--- Sales = Quantity × Price validation
+
+-- Check 3: No negative or zero quantity
 SELECT *
-FROM bronze.crm_sales_details
-WHERE sls_sales IS NULL
-   OR sls_quantity IS NULL
-   OR sls_price IS NULL
-   OR sls_sales <= 0
-   OR sls_quantity <= 0
-   OR sls_price <= 0
-   OR sls_sales <> sls_quantity * sls_price;
+FROM silver.crm_sales_details
+WHERE sls_quantity <= 0;
+
+
+-- Check 4: No negative or zero price
+SELECT *
+FROM silver.crm_sales_details
+WHERE sls_price <= 0;
+
+
+-- Check 5: Sales amount must equal quantity × price
+SELECT *
+FROM silver.crm_sales_details
+WHERE sls_sales <> sls_quantity * sls_price;
+
+
+-- Check 6: No missing critical fields
+SELECT *
+FROM silver.crm_sales_details
+WHERE sls_prd_key IS NULL
+   OR sls_cust_id IS NULL;
+
 
