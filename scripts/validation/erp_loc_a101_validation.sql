@@ -1,23 +1,33 @@
 /*
 ========================================================
-TABLE : erp_loc_a101
-LAYER : Bronze → Silver
-PURPOSE: Validate and standardize location information
-RULE  : All queries should return ZERO rows
+TABLE   : silver.erp_loc_a101
+LAYER   : Silver (Clean Layer)
+PURPOSE : Validate and standardize customer location data
+RULE    : All queries must return ZERO rows
 ========================================================
 */
 
--- Null or empty customer IDs
+-- Check 1: Customer ID must exist
 SELECT *
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
 WHERE CID IS NULL OR CID = '';
 
--- Country values review (standardization check)
-SELECT DISTINCT CNTRY
-FROM bronze.erp_loc_a101;
 
--- Unwanted spaces
+-- Check 2: Country must not be null or blank
 SELECT *
-FROM bronze.erp_loc_a101
+FROM silver.erp_loc_a101
+WHERE CNTRY IS NULL OR CNTRY = '';
+
+
+-- Check 3: Remove unwanted spaces
+SELECT *
+FROM silver.erp_loc_a101
 WHERE CNTRY <> TRIM(CNTRY);
+
+
+-- Check 4: Country values review for standardization
+-- Expect consistent values like India, USA, UK (not mixed cases)
+SELECT DISTINCT CNTRY
+FROM silver.erp_loc_a101;
+
 
