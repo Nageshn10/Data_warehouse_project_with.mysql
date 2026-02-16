@@ -1,25 +1,29 @@
 /*
 ========================================================
-TABLE : erp_cust_az12
-LAYER : Bronze → Silver
-PURPOSE: Validate customer demographic data from ERP
-RULE  : All queries should return ZERO rows
+TABLE   : silver.erp_cust_az12
+LAYER   : Silver (Clean Layer)
+PURPOSE : Validate ERP customer demographic data
+RULE    : All queries must return ZERO rows
 ========================================================
 */
 
--- Invalid or unrealistic birth dates
+-- Check 1: Customer ID must exist
 SELECT *
-FROM bronze.erp_cust_az12
-WHERE BDATE < '1924-01-01'
-   OR BDATE > CURDATE();
-
--- Null customer IDs
-SELECT *
-FROM bronze.erp_cust_az12
+FROM silver.erp_cust_az12
 WHERE CID IS NULL OR CID = '';
 
--- Gender normalization review
-SELECT DISTINCT GEN
-FROM bronze.erp_cust_az12;
 
--- If rows returned → clean before Silver load
+-- Check 2: Birthdate must be valid
+-- no future dates, no unrealistic old dates
+SELECT *
+FROM silver.erp_cust_az12
+WHERE BDATE IS NULL
+   OR BDATE < '1924-01-01'
+   OR BDATE > CURDATE();
+
+
+-- Check 3: Gender values consistency review
+-- Expect only Male / Female / Unknown (or your standard)
+SELECT DISTINCT GEN
+FROM silver.erp_cust_az12;
+
