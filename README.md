@@ -1,86 +1,117 @@
 # Data Warehouse Project using MySQL
 
 ## Overview
-This project demonstrates how to build a simple Data Warehouse using MySQL.
+This project demonstrates the end-to-end design and implementation of a Data Warehouse using MySQL.
 
-The goal is to:
-- collect raw data
-- clean and standardize it
-- prepare it for reporting and analytics
+The objective is to build a structured analytics platform that:
+- ingests raw data from multiple sources (CRM, ERP)
+- cleans and standardizes the data
+- validates data quality
+- transforms data into analytics-ready models
+- supports reporting and business insights
 
-The warehouse follows a 3-layer architecture.
+The solution follows a layered (Medallion) architecture for better scalability, maintainability, and data reliability.
 
+---
 
 ## Architecture
-
 Bronze → Silver → Gold
 
-Bronze : Raw source data  
-Silver : Cleaned and validated data  
-Gold   : Business-ready analytics tables  
+![Architecture](docs/architecture.png)
 
+---
 
-## Layer Details
+## Layer Description
 
 ### Bronze (Raw Layer)
-Stores data exactly as received from source systems.
-
-No transformations are applied.
-
-Example tables:
-- crm_cust_info
-- crm_prd_info
-- crm_sales_details
-- erp_cust_az12
-- erp_loc_a101
-- erp_px_cat_g1v2
-
+- Stores source data exactly as received
+- No transformations applied
+- Used for traceability and reprocessing
 
 ### Silver (Clean Layer)
-Data is cleaned and standardized.
-
-Operations performed:
-- remove nulls
-- trim spaces
-- fix formats
-- validate business rules
-- convert data types
-
+- Data cleaning and standardization
+- Remove nulls and duplicates
+- Trim spaces and fix formats
+- Apply business rules
+- Perform data quality validations
 
 ### Gold (Analytics Layer)
-Reporting-ready tables for dashboards and analysis.
+- Business-ready tables for reporting
+- Star schema design
+- Dimension and fact tables
+- Optimized for dashboards and analysis
 
-Tables:
+---
+
+## Data Model (Gold)
 - dim_customers
 - dim_products
 - fact_sales
 
+---
 
 ## Project Structure
-
-docs/
-- data_catalog.md
-- naming_conventions.md
-- er_diagram.png
-
-sql/
-- bronze/
-- silver/
-- gold/
-- validations/
-
-diagrams/
-- architecture.png
-- data_flow.png
-- integration_model.png
-- data_mart.png
+- datasets
+- docs
+- tests
+- scripts
+- scripts
+- tests
 
 
-## Tools Used
+### datasets
+Sample CRM and ERP source CSV files used for loading raw data
+
+### docs
+- architecture diagrams
+- data catalog
+- naming conventions
+- data flow and models
+
+### scripts
+SQL scripts organized by layer:
+- bronze → raw loads
+- silver → cleaning & transformations
+- gold → analytical tables
+- validations → data quality checks
+
+### tests
+Validation and quality check queries
+
+---
+
+## Tools & Technologies
 - MySQL
 - SQL
-- draw.io for diagrams
+- CSV sample datasets
+- draw.io (architecture & ER diagrams)
+- Git & GitHub
+- Data Warehousing concepts (Bronze–Silver–Gold architecture)
 
+---
+
+## Key Features
+- Layered warehouse architecture
+- ETL using SQL scripts
+- Data quality validations
+- Naming standards and documentation
+- Star schema modeling
+- Production-style project structure
+
+---
+
+## Learning Note
+
+
+Learning Note:
+This project was developed independently as a hands-on exercise after learning data engineering concepts from tutorials and implementing them in MySQL using my own approach.
+
+---
 
 ## Author
-Nagesh
+Nagesh  
+Senior Monitoring Analyst  
+
+LinkedIn: https://www.linkedin.com/in/nagesh-n-960b88203
+
+
