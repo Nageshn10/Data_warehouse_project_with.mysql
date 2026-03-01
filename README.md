@@ -57,7 +57,6 @@ Separate Bronze ingestion scripts were not required.
 - docs
 - tests
 - scripts
-- scripts
 - tests
 
 
