@@ -16,8 +16,8 @@ WHERE CAT IS NULL OR CAT = ''
 -- No unwanted spaces
 SELECT *
 FROM silver.erp_px_cat_g1v2
-WHERE CAT <> TRIM(CAT)
-   OR SUBCAT <> TRIM(SUBCAT);
+WHERE CAT!= TRIM(CAT)
+   OR SUBCAT != TRIM(SUBCAT);
 
 -- Review standardized category values
 SELECT DISTINCT CAT, SUBCAT
