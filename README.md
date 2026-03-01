@@ -24,9 +24,11 @@ Bronze → Silver → Gold
 ## Layer Description
 
 ### Bronze (Raw Layer)
-- Stores source data exactly as received
-- No transformations applied
-- Used for traceability and reprocessing
+
+Stores raw source data exactly as received from CRM and ERP systems.
+
+In this project, source CSV files are kept in the `datasets/` folder and imported directly into MySQL.  
+Separate Bronze ingestion scripts were not required.
 
 ### Silver (Clean Layer)
 - Data cleaning and standardization
