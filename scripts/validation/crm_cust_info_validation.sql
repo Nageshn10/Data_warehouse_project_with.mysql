@@ -23,8 +23,8 @@ WHERE cst_id IS NULL OR cst_id = '';
 -- Check 3: No extra spaces in names
 SELECT *
 FROM silver.crm_cust_info
-WHERE cst_firstname <> TRIM(cst_firstname)
-   OR cst_lastname  <> TRIM(cst_lastname);
+WHERE cst_firstname !=TRIM(cst_firstname)
+   OR cst_lastname  != TRIM(cst_lastname);
 
 
 -- Check 4: Validate gender values only (Male/Female/n/a)
